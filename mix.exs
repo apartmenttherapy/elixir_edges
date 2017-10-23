@@ -14,6 +14,7 @@ defmodule Edges.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {Edges, []},
       extra_applications: [:logger, :ecto]
     ]
   end
