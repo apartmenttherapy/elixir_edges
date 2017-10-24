@@ -6,3 +6,5 @@ config :edges, Edges.Repo,
   username: "postgres",
   password: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :logger, level: :warn
