@@ -3,6 +3,8 @@ defmodule Edges.Events do
   The boundary for the Events system.
   """
 
+  @behaviour Edges.EventsBehaviour
+
   import Ecto.Query, warn: false
   alias Ecto.Changeset
   alias Edges.Repo
