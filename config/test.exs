@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :edges, backend: Edges.Events.Mock
+
 config :edges, Edges.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "edges_test",
