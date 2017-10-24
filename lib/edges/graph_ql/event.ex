@@ -25,11 +25,6 @@ defmodule Edges.GraphQL.Event do
   alias Edges.Events
   alias Edges.Events.Action
 
-  scalar :edge_time, description: "ISOz time since Unix Epoch" do
-    parse &Timex.parse(&1.value, "{s-epoch}")
-    serialize &Timex.format!(&1, "{s-epoch}")
-  end
-
   @desc "An Event for a Source"
   object :event do
     field :id,            :string
