@@ -3,16 +3,18 @@ defmodule Edges do
   Documentation for Edges.
   """
 
-  @doc """
-  Hello world.
+  use Application
 
-  ## Examples
+  alias Edges.Repo
 
-      iex> Edges.hello
-      :world
+  def start(_type, _args) do
+    import Supervisor.Spec
 
-  """
-  def hello do
-    :world
+    children = [
+      supervisor(Repo, [])
+    ]
+
+    opts = [strategy: :one_for_one, name: Edges.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end
