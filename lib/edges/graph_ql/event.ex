@@ -17,6 +17,7 @@ defmodule Edges.GraphQL.Event do
   """
 
   use Absinthe.Schema.Notation
+  use Absinthe.Ecto, repo: Edges.Repo
 
   import Ecto.Query
 
@@ -35,7 +36,7 @@ defmodule Edges.GraphQL.Event do
     field :action,        :string
     field :resource_type, :string
     field :resource_id,   :string
-    field :source,        :event_source
+    field :source,        :source, resolve: assoc(:source)
     field :inserted_at,   :time
   end
 

@@ -30,14 +30,8 @@ defmodule Edges.GraphQL.Source do
   @desc "A Source (They whom smelt it)"
   object :source do
     field :id,           :string
-    field :source_id,    :string
-    field :actions,      list_of(:action), resolve: assoc(:actions)
-  end
-
-  @desc "The source belonging to a specific event"
-  object :event_source do
-    field :id,           :string
-    field :source_id,    :string
+    field :person,       :string
+    field :events,       list_of(:event), resolve: assoc(:actions)
   end
 
   @doc """
