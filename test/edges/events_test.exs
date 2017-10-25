@@ -8,8 +8,6 @@ defmodule Edges.EventsTest do
   alias Edges.Events.Action
   alias Edges.Events.Source
 
-  import Ecto.Query
-
   @source "Human"
   @alien_source "Alien"
   @valid_event %{person: @source, action: "Did stuff", resource_type: "History", resource_id: "1978"}
