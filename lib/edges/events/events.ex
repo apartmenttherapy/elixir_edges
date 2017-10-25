@@ -178,6 +178,5 @@ defmodule Edges.Events do
     from(a in query, where: a.inserted_at < ^created_prior_to)
   end
 
-  defp source_join(query), do: from(a in query, join: s in Source, on: s.id == a.source_id)
   defp all_count(query), do: from(a in query, select: count(a.id))
 end

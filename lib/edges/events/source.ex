@@ -26,7 +26,6 @@ defmodule Edges.Events.Source do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias __MODULE__
   alias Edges.Events.Action
 
   @primary_key {:id, :binary_id, autogenerate: true}

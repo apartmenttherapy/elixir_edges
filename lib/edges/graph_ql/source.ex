@@ -24,7 +24,6 @@ defmodule Edges.GraphQL.Source do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Edges.Repo
 
-  alias Edges.Events
   alias Edges.Events.Source
 
   @desc "A Source (They whom smelt it)"

@@ -88,7 +88,7 @@ defmodule Edges.Events.Action do
     messages =
       changeset
       |> Map.get(:errors)
-      |> Enum.reduce([], fn {name, {message, _jumk}}, acc ->
+      |> Enum.reduce([], fn {_name, {message, _jumk}}, acc ->
            [message] ++ acc
          end)
 
