@@ -9,7 +9,7 @@ defmodule Edges.GraphQL.Source do
   Field        | Type
   :----        | ---:
   id           | string
-  source_id    | string
+  person       | string
   actions      | list_of(action)
 
   ### event_source
@@ -17,7 +17,7 @@ defmodule Edges.GraphQL.Source do
   Field        | Type
   :----        | ---:
   id           | string
-  source_id    | string
+  person       | string
 
   """
 
@@ -30,18 +30,12 @@ defmodule Edges.GraphQL.Source do
   @desc "A Source (They whom smelt it)"
   object :source do
     field :id,           :string
-    field :source_id,    :string
-    field :actions,      list_of(:action), resolve: assoc(:actions)
-  end
-
-  @desc "The source belonging to a specific event"
-  object :event_source do
-    field :id,           :string
-    field :source_id,    :string
+    field :person,       :string
+    field :events,       list_of(:event), resolve: assoc(:actions)
   end
 
   @doc """
-  Returns all `Edges.Events.User` records matching the given criteria.
+  Returns all `Edges.Events.Source` records matching the given criteria.
 
   ## Parameters
 
@@ -50,13 +44,15 @@ defmodule Edges.GraphQL.Source do
 
   ## Examples
 
-      iex> fetch(%{source_id: "84835"})
-      {:ok, [%User{source_id: "84835", id: "2383-1384-18448-1843758"}]}
+      iex> fetch(%{person: "bob"})
+      {:ok, [%User{person: "bob", id: "2383-1384-18448-1843758"}]}
 
   """
-  @spec fetch(%{source_id: String.t,
+  @spec fetch(%{person: String.t,
                 id: String.t}, map) :: {:ok, [%Source{}]} | {:ok, []}
   def fetch(source_attributes, _context) do
-    {:ok, Events.get_sources(source_attributes)}
+    {:ok, backend().get_sources(source_attributes)}
   end
+
+  defp backend, do: Application.get_env(:edges, :backend)
 end

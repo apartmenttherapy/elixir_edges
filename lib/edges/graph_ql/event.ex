@@ -17,17 +17,12 @@ defmodule Edges.GraphQL.Event do
   """
 
   use Absinthe.Schema.Notation
+  use Absinthe.Ecto, repo: Edges.Repo
 
   import Ecto.Query
 
   alias Edges.Repo
-  alias Edges.Events
   alias Edges.Events.Action
-
-  scalar :edge_time, description: "ISOz time since Unix Epoch" do
-    parse &Timex.parse(&1.value, "{s-epoch}")
-    serialize &Timex.format!(&1, "{s-epoch}")
-  end
 
   @desc "An Event for a Source"
   object :event do
@@ -35,7 +30,7 @@ defmodule Edges.GraphQL.Event do
     field :action,        :string
     field :resource_type, :string
     field :resource_id,   :string
-    field :source,        :event_source
+    field :source,        :source, resolve: assoc(:source)
     field :inserted_at,   :time
   end
 
@@ -56,9 +51,16 @@ defmodule Edges.GraphQL.Event do
   @spec create(%{person: String.t,
                  action: String.t,
                  resource_type: String.t,
-                 resource_id: String.t}, map) :: {:ok, %Action{}} | {:error, String.t}
+                 resource_id: String.t}, map) :: {:ok, %Action{}} | {:error, Keyword.t}
   def create(event_data, _) do
-    Events.create(event_data)
+    response = backend().create(event_data)
+
+    case response do
+      {:ok, record} ->
+        {:ok, record}
+      {:error, message} ->
+        {:error, message: message}
+    end
   end
 
   @doc """
@@ -76,7 +78,7 @@ defmodule Edges.GraphQL.Event do
   """
   @spec list(map, term) :: {:ok, [%Action{}]} | {:ok, []}
   def list(event_data, _context) do
-    events = Events.all(event_data)
+    events = backend().all(event_data)
 
     {:ok, events}
   end
@@ -96,7 +98,7 @@ defmodule Edges.GraphQL.Event do
   """
   @spec total(map, term) :: {:ok, integer}
   def total(args, _context) do
-    [count] = Events.count(args)
+    [count] = backend().count(args)
 
     {:ok, count}
   end
@@ -117,11 +119,13 @@ defmodule Edges.GraphQL.Event do
   """
   @spec delete(map, map) :: {:ok, boolean}
   def delete(event_data, _context) do
-    case Events.delete(event_data) do
+    case backend().delete(event_data) do
       {:ok, _deleted} ->
         {:ok, true}
       {:error, _reason} ->
         {:ok, false}
     end
   end
+
+  defp backend, do: Application.get_env(:edges, :backend)
 end
