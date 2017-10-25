@@ -26,7 +26,7 @@ defmodule Edges.GraphQL.Event do
 
   @desc "An Event for a Source"
   object :event do
-    field :id,            :string
+    field :id,            :id
     field :action,        :string
     field :resource_type, :string
     field :resource_id,   :string
