@@ -72,7 +72,7 @@ defmodule Edges.Events do
       |> Repo.insert()
       |> case do
            {:ok, action} ->
-             {:ok, action}
+             action
            {:error, changeset} ->
              Repo.rollback(Action.errors(changeset))
          end
