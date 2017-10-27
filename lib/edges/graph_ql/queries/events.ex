@@ -5,12 +5,11 @@ defmodule Edges.GraphQL.Queries.Events do
 
   object :events_queries do
     field :events, list_of(:event) do
-      arg :id,            :string
+      arg :id,            :id
       arg :action,        :string
       arg :resource_type, :string
       arg :resource_id,   :string
-      arg :community_id,  :string
-      arg :ga_client_id,  :string
+      arg :person,        :string
 
       resolve &Event.list/2
     end
@@ -19,8 +18,7 @@ defmodule Edges.GraphQL.Queries.Events do
       arg :action,        :string
       arg :resource_type, :string
       arg :resource_id,   :string
-      arg :community_id,  :string
-      arg :ga_client_id,  :string
+      arg :person,        :string
 
       resolve &Event.total/2
     end
@@ -31,13 +29,13 @@ defmodule Edges.GraphQL.Queries.Events do
       arg :action,        non_null(:string)
       arg :resource_type, non_null(:string)
       arg :resource_id,   non_null(:string)
-      arg :community_id,  non_null(:string)
+      arg :person,        non_null(:string)
 
       resolve &Event.create/2
     end
 
     field :delete_event, :boolean do
-      arg :community_id,  non_null(:string)
+      arg :person,        non_null(:string)
       arg :action,        non_null(:string)
       arg :resource_type, non_null(:string)
       arg :resource_id,   non_null(:string)

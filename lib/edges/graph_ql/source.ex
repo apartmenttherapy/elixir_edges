@@ -28,7 +28,7 @@ defmodule Edges.GraphQL.Source do
 
   @desc "A Source (They whom smelt it)"
   object :source do
-    field :id,           :string
+    field :id,           :id
     field :person,       :string
     field :events,       list_of(:event), resolve: assoc(:actions)
   end
@@ -48,9 +48,11 @@ defmodule Edges.GraphQL.Source do
 
   """
   @spec fetch(%{person: String.t,
-                id: String.t}, map) :: {:ok, [%Source{}]} | {:ok, []}
+                id: String.t}, map) :: {:ok, %Source{} | nil}
   def fetch(source_attributes, _context) do
-    {:ok, backend().get_sources(source_attributes)}
+    found = backend().get_sources(source_attributes)
+
+    {:ok, List.first(found)}
   end
 
   defp backend, do: Application.get_env(:edges, :backend)

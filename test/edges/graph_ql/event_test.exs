@@ -10,7 +10,7 @@ defmodule Edges.GraphQL.EventTest do
     end
 
     test "create/2 returns {:error, message: String.t} when given invalid data" do
-      assert {:error, message: "Already taken"} = Event.create(%{error: "Already taken"}, [])
+      assert {:error, message: "Failed to create Event"} = Event.create(%{action: "error"}, [])
     end
   end
 
@@ -20,7 +20,7 @@ defmodule Edges.GraphQL.EventTest do
     end
 
     test "list/2 returns {:ok, []} when there are no matches" do
-      assert {:ok, []} = Event.list(%{empty: true}, [])
+      assert {:ok, []} = Event.list(%{action: "empty"}, [])
     end
   end
 
@@ -36,7 +36,7 @@ defmodule Edges.GraphQL.EventTest do
     end
 
     test "delete/2 returns {:ok, false} if the event could not be deleted" do
-      assert {:ok, false} = Event.delete(%{error: "Can't touch this"}, [])
+      assert {:ok, false} = Event.delete(%{action: "error"}, [])
     end
   end
 end

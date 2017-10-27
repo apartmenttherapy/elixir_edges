@@ -6,11 +6,11 @@ defmodule Edges.GraphQL.SourceTest do
 
   describe "fetching" do
     test "fetch/2 returns {:ok, [Source.t]} when there is a match" do
-      assert {:ok, [%SourceRecord{}]} = Source.fetch(%{person: "Bob"}, [])
+      assert {:ok, %SourceRecord{}} = Source.fetch(%{person: "Bob"}, [])
     end
 
     test "fetch/2 returns {:ok, []} when there are no matches" do
-      assert {:ok, []} = Source.fetch(%{person: "Fake Person"}, [])
+      assert {:ok, nil} = Source.fetch(%{person: "Fake Person"}, [])
     end
   end
 end
