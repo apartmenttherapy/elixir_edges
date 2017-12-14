@@ -27,7 +27,9 @@ defmodule Edges.Events.Action do
   """
 
   use Ecto.Schema
+
   import Ecto.Changeset
+  import Ecto.Query
 
   alias __MODULE__
   alias Edges.Events.Source
@@ -66,7 +68,9 @@ defmodule Edges.Events.Action do
       attrs
       |> Map.get(:person)
 
-    Repo.one(Source, person: person) ||
+    source_query = from(s in Source, where: s.person == ^person)
+
+    Repo.one(source_query) ||
       Repo.insert!(%Source{person: person})
   end
 
