@@ -23,7 +23,7 @@ defmodule Edges.Events.ActionTest do
 
       {:ok, action} =
         %Action{}
-        |> Action.changeset(%{action: "Favorited", resource_type: "Listing", resource_id: "42", person: person})
+        |> Action.changeset(%{action: "Favorited", resource_type: "Listing", resource_id: "8b3044ca-9af6-4740-a7ef-50c670153c8b", person: person})
         |> Repo.insert()
 
       assert ^source_id = action.source_id()
@@ -34,7 +34,7 @@ defmodule Edges.Events.ActionTest do
 
       {:ok, action} =
         %Action{}
-        |> Action.changeset(%{action: "Favorites", resource_type: "Listing", resource_id: "42", person: "new guy"})
+        |> Action.changeset(%{action: "Favorited", resource_type: "Listing", resource_id: "0f9b31e3-8324-4181-9deb-fb53a0251aff", person: "new guy"})
         |> Repo.insert()
 
       refute existing_id == action.source_id()

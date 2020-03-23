@@ -19,9 +19,6 @@ defmodule Edges.GraphQL.Event do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Edges.Repo
 
-  import Ecto.Query
-
-  alias Edges.Repo
   alias Edges.Events.Action
 
   @desc "An Event for a Source"
@@ -44,7 +41,7 @@ defmodule Edges.GraphQL.Event do
 
   ## Examples
 
-      iex> create(%{source_id: "383838", action: "favorite", resource_type: "Post", resource_id: "223854"})
+      iex> create(%{source_id: "04cf7fbc-9819-4cb2-9fae-8820fb7e40ac", action: "Favorited", resource_type: "Post", resource_id: "e9546fbd-260e-4f44-8073-ddd1aeee383b"})
       {:ok, %Action{}}
 
   """
@@ -73,7 +70,7 @@ defmodule Edges.GraphQL.Event do
   ## Examples
 
       iex> list(%{source_id: "383838"}, %{})
-      {:ok, [%Action{source: %Srouce{source_id: "383838", id: "3834-38843-3848-2"}, action: "follow", resource_id: "857", resource_type: "Author"}]}
+      {:ok, [%Action{source: %Srouce{source_id: "04cf7fbc-9819-4cb2-9fae-8820fb7e40ac", id: "3834-38843-3848-2"}, action: "Viewed", resource_id: "e9546fbd-260e-4f44-8073-ddd1aeee383b", resource_type: "Listing"}]}
 
   """
   @spec list(map, term) :: {:ok, [%Action{}]} | {:ok, []}
@@ -93,7 +90,7 @@ defmodule Edges.GraphQL.Event do
 
   ## Examples
 
-      iex> count(%{source_id: "383838"})
+      iex> count(%{source_id: "04cf7fbc-9819-4cb2-9fae-8820fb7e40ac"})
       {:ok, 10}
   """
   @spec total(map, term) :: {:ok, integer}
@@ -113,7 +110,7 @@ defmodule Edges.GraphQL.Event do
 
   ## Examples
 
-      iex> delete(%{source_id: "38385", action: "read", resource_id: "38382", resource_type: "Post"})
+      iex> delete(%{source_id: "04cf7fbc-9819-4cb2-9fae-8820fb7e40ac", action: "Viewed", resource_id: "e9546fbd-260e-4f44-8073-ddd1aeee383b", resource_type: "Listing"})
       {:ok, "Deleted"}
 
   """

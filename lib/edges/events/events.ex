@@ -6,7 +6,6 @@ defmodule Edges.Events do
   @behaviour Edges.EventsBehaviour
 
   import Ecto.Query, warn: false
-  alias Ecto.Changeset
   alias Edges.Repo
 
   alias Edges.Events.Action

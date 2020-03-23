@@ -34,6 +34,7 @@ defmodule Edges.Events.Action do
   alias __MODULE__
   alias Edges.Events.Source
   alias Edges.Repo
+  alias Ecto.UUID
 
   @type t :: %Action{id: String.t,
                      source_id: String.t,
@@ -57,10 +58,17 @@ defmodule Edges.Events.Action do
 
   @doc false
   def changeset(%Action{} = action, attrs) do
+    required_field_values = Application.get_env(:edges, :required_field_values)
+
     action
     |> cast(attrs, [:action, :resource_type, :resource_id])
     |> put_assoc(:source, find_or_create_source(attrs))
     |> validate_required([:action, :resource_type, :resource_id, :source])
+    |> validate_inclusion(:action, required_field_values[:action],
+         [message: "Incorrect value for field action"])
+    |> validate_inclusion(:resource_type, required_field_values[:resource_type],
+         [message: "Incorrect value for field resource_type"])
+    |> validate_change(:resource_id, fn(:resource_id, attrs) ->  validation_uuid(:resource_id, attrs) end)
   end
 
   defp find_or_create_source(attrs) do
@@ -97,5 +105,14 @@ defmodule Edges.Events.Action do
          end)
 
       %{message: messages}
+  end
+
+  @spec validation_uuid(atom(), map) :: List.t()
+  defp validation_uuid(key, value) do
+    with {:ok, _value} <- UUID.cast(value) do
+      []
+    else
+      _-> [{key, "Incorrect value for field "<> Atom.to_string(key)}]
+    end
   end
 end

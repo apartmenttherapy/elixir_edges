@@ -10,19 +10,19 @@ defmodule Edges.GraphQL.EventQueryTest do
     test "querying events returns matches" do
       result = Absinthe.run(events_query(), TestSchema, variables: %{"id" => "8833", "action" => "Click"})
 
-      assert {:ok, %{data: %{"events" => [%{"action" => "Click", "id" => "8833"}]}}} = result
+      assert {:ok, %{data: %{"events" => [%{"action" => "Click", "id" => "8833"}]}}} == result
     end
 
     test "querying events returns an empty list if there were no matches" do
       result = Absinthe.run(events_query(), TestSchema, variables: %{"action" => "empty"})
 
-      assert {:ok, %{data: %{"events" => []}}} = result
+      assert {:ok, %{data: %{"events" => []}}} == result
     end
 
     test "querying the event count returns an accurate number" do
       result = Absinthe.run(count_query(), TestSchema, variables: %{"action" => "8"})
 
-      assert {:ok, %{data: %{"eventCount" => "8"}}} = result
+      assert {:ok, %{data: %{"eventCount" => "8"}}} == result
     end
 
     def events_query do
@@ -47,28 +47,27 @@ defmodule Edges.GraphQL.EventQueryTest do
 
   describe "mutations" do
     test "creating an event returns the event when successful" do
-      result = Absinthe.run(create_query(), TestSchema, variables: @valid_create)
-      create_attrs = Map.delete(@valid_create, "person")
-
-      assert {:ok, %{data: %{"newEvent" => ^create_attrs}}} = result
+      {:ok, %{data: %{"newEvent" => result}}} = Absinthe.run(create_query(), TestSchema, variables: @valid_create)
+      expected_result = Map.delete(@valid_create, "person")
+      assert  expected_result == result
     end
 
     test "creating an event returns a useful error when it fails" do
-      result = Absinthe.run(create_query(), TestSchema, variables: @error_create)
-
-      assert {:ok, %{data: %{"newEvent" => nil}, errors: [%{locations: _, message: "In field \"newEvent\": Failed to create Event"}]}} = result
+      {:ok, %{data: data, errors: [%{message: message}]}} = Absinthe.run(create_query(), TestSchema, variables: @error_create)
+      assert nil == Map.get(data, "newEvent", "not_found")
+      assert "Failed to create Event" == message
     end
 
     test "deleting an event returns true if successful" do
       result = Absinthe.run(delete_query(), TestSchema, variables: @valid_create)
 
-      assert {:ok, %{data: %{"deleteEvent" => true}}} = result
+      assert {:ok, %{data: %{"deleteEvent" => true}}} == result
     end
 
     test "deleting an event returns false if unsuccessful" do
       result = Absinthe.run(delete_query(), TestSchema, variables: %{@valid_create | "action" => "error"})
 
-      assert {:ok, %{data: %{"deleteEvent" => false}}} = result
+      assert {:ok, %{data: %{"deleteEvent" => false}}} == result
     end
 
     def create_query do
