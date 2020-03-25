@@ -82,10 +82,10 @@ defmodule Edges.Events do
     |> case do
          {:error, _} = error ->
            error
-         :nil ->
+         {:ok, source} ->
+           {:ok, Map.put(event_data, :source, source)}
+         _ ->
            {:error, "Incorrect person "}
-         source ->
-          {:ok, Map.put(event_data, :source, source)}
        end
   end
 

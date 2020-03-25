@@ -16,7 +16,8 @@ defmodule Edges.EventsTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Edges.Repo)
 
     single_event = fn ->
-      event_with_source = Map.put(@valid_event, :source, Source.find_or_create_source(@valid_event))
+      {:ok, source} = Source.find_or_create_source(@valid_event)
+      event_with_source = Map.put(@valid_event, :source, source)
 
       {:ok, event} =
         %Action{}
@@ -28,7 +29,8 @@ defmodule Edges.EventsTest do
 
     two_events = fn ->
       new_event = Enum.into(%{action: "Viewed", resource_id: "e5dfe887-5ca4-4bb2-8fb6-7d71c3b9ed8d"}, @valid_event)
-      event_with_source = Map.put(new_event, :source, Source.find_or_create_source(new_event))
+      {:ok, second_source} = Source.find_or_create_source(new_event)
+      event_with_source = Map.put(new_event, :source, second_source)
 
       {:ok, second} =
         %Action{}
@@ -134,6 +136,18 @@ defmodule Edges.EventsTest do
       event_data = Enum.into(%{resource_type: "(select(0)from(select(sleep(2)))v)/*'+(select(0)from(select(sleep(3)))v)+'", resource_id: "e5dfe887-5ca4-4bb2-8fb6-7d71c3b9ed8d"}, @valid_event)
       result = Events.create(event_data)
       assert {:error, %{message: ["Incorrect value for field resource_type"]}} == result
+    end
+  end
+
+  describe "check if rollback work in correct way" do
+    test "create/2 return error because incorrect action" do
+      event_data = Enum.into(%{person: "-1 OR 3*2>(0+5+257-257)"}, @valid_event)
+      result = Events.create(event_data)
+
+      assert {:error, %{message: ["Incorrect value for field person"]}} == result
+
+      sources = Events.get_sources(%{person: event_data.person})
+      assert [] == sources
     end
   end
 end

@@ -61,8 +61,8 @@ defmodule Edges.Events.Source do
   @spec is_auth0(tuple(), atom(), String.t()) :: List.t()
   defp is_auth0({:ok, _}, _key, _value), do: []
   defp is_auth0(_, key, value) do
-    with [_user_id, empty_string] <- String.split(value),
-         0 <- String.length(empty_string),
+    with [user_id] <- String.split(value),
+         true <- user_id == value,
          true <- Regex.match?(@auth0_validate_reg_exp, value) do
       []
     else
@@ -72,14 +72,16 @@ defmodule Edges.Events.Source do
 
   @spec find_or_create_source(map) :: List.t()
   def find_or_create_source(%{person: person}) do
-    Repo.one(from(s in Source, where: s.person == ^person)) ||
-      maybe_insert_person(person)
+    from(s in Source, where: s.person == ^person)
+    |> Repo.one()
+    |> maybe_insert_person(person)
   end
 
-  defp maybe_insert_person(person) do
+  defp maybe_insert_person(nil, person) do
     %Edges.Events.Source{}
     |> Source.changeset(%{person: person})
-    |> Repo.insert!
+    |> Repo.insert
   end
+  defp maybe_insert_person(res, _), do: {:ok, res}
 
 end

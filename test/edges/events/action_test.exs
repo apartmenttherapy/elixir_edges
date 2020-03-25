@@ -22,7 +22,7 @@ defmodule Edges.Events.ActionTest do
       source_id = existing_source.id()
 
       event = %{action: "Favorited", resource_type: "Listing", resource_id: "8b3044ca-9af6-4740-a7ef-50c670153c8b", person: person}
-      source = %{id: id, person: source_person} = Source.find_or_create_source(event)
+      {:ok, %{id: id, person: source_person} = source} = Source.find_or_create_source(event)
 
       assert id == source_id
       assert person == source_person
@@ -41,7 +41,7 @@ defmodule Edges.Events.ActionTest do
       existing_id = existing_source.id()
 
       event = %{action: "Favorited", resource_type: "Listing", resource_id: "0f9b31e3-8324-4181-9deb-fb53a0251aff", person: "fb585729-0f3f-4518-868b-ea6eaeb4550b"}
-      source = %{id: id} = Source.find_or_create_source(event)
+      {:ok, %{id: id} = source} = Source.find_or_create_source(event)
 
       assert id != existing_id
 
