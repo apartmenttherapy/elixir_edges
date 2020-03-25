@@ -16,18 +16,23 @@ defmodule Edges.EventsTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Edges.Repo)
 
     single_event = fn ->
+      event_with_source = Map.put(@valid_event, :source, Source.find_or_create_source(@valid_event))
+
       {:ok, event} =
         %Action{}
-        |> Action.changeset(@valid_event)
+        |> Action.changeset(event_with_source)
         |> Repo.insert()
 
       event
     end
 
     two_events = fn ->
+      new_event = Enum.into(%{action: "Viewed", resource_id: "e5dfe887-5ca4-4bb2-8fb6-7d71c3b9ed8d"}, @valid_event)
+      event_with_source = Map.put(new_event, :source, Source.find_or_create_source(new_event))
+
       {:ok, second} =
         %Action{}
-        |> Action.changeset(Enum.into(%{action: "Viewed", resource_id: "e5dfe887-5ca4-4bb2-8fb6-7d71c3b9ed8d"}, @valid_event))
+        |> Action.changeset(event_with_source)
         |> Repo.insert()
 
       [single_event.(), second]

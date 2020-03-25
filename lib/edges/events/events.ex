@@ -66,16 +66,34 @@ defmodule Edges.Events do
   @spec create(map) :: {:ok, Action.t} | {:error, term}
   def create(event_data) do
     Repo.transaction(fn ->
-      %Action{}
-      |> Action.changeset(event_data)
-      |> Repo.insert()
-      |> case do
-           {:ok, action} ->
-             action
-           {:error, changeset} ->
-             Repo.rollback(Action.errors(changeset))
-         end
+      with {:ok, auction_data} <- create_source(event_data),
+           {:ok, action} <- create_auction(auction_data) do
+        action
+      else
+        {:error, changeset} -> Repo.rollback(Action.errors(changeset))
+      end
     end)
+  end
+
+  @spec create_source(map) :: {:ok, Source.t} | {:error, term}
+  defp create_source(event_data) do
+    event_data
+    |> Source.find_or_create_source()
+    |> case do
+         {:error, _} = error ->
+           error
+         :nil ->
+           {:error, "Incorrect person "}
+         source ->
+          {:ok, Map.put(event_data, :source, source)}
+       end
+  end
+
+  @spec create_auction(map) :: {:ok, Action.t} | {:error, term}
+  defp create_auction(event_data) do
+    %Action{}
+    |> Action.changeset(event_data)
+    |> Repo.insert()
   end
 
   @doc """

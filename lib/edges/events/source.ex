@@ -25,8 +25,14 @@ defmodule Edges.Events.Source do
 
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, warn: false
 
   alias Edges.Events.Action
+  alias Ecto.UUID
+  alias Edges.Repo
+  alias __MODULE__
+
+  @auth0_validate_reg_exp ~r/^(auth0|google-oauth2|facebook)\|[a-zA-Z0-9]+/
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -42,5 +48,38 @@ defmodule Edges.Events.Source do
   def changeset(%__MODULE__{} = source, attrs) do
     source
     |> cast(attrs, [:person])
+    |> validate_change(:person, fn(:person, attrs) -> is_person(:person, attrs) end)
   end
+
+  @spec is_person(atom(), String.t()) :: List.t()
+  defp is_person(key, value) do
+    value
+    |> UUID.cast()
+    |> is_auth0(key, value)
+  end
+
+  @spec is_auth0(tuple(), atom(), String.t()) :: List.t()
+  defp is_auth0({:ok, _}, _key, _value), do: []
+  defp is_auth0(_, key, value) do
+    with [_user_id, empty_string] <- String.split(value),
+         0 <- String.length(empty_string),
+         true <- Regex.match?(@auth0_validate_reg_exp, value) do
+      []
+    else
+      _-> [{key, "Incorrect value for field "<> Atom.to_string(key)}]
+    end
+  end
+
+  @spec find_or_create_source(map) :: List.t()
+  def find_or_create_source(%{person: person}) do
+    Repo.one(from(s in Source, where: s.person == ^person)) ||
+      maybe_insert_person(person)
+  end
+
+  defp maybe_insert_person(person) do
+    %Edges.Events.Source{}
+    |> Source.changeset(%{person: person})
+    |> Repo.insert!
+  end
+
 end
