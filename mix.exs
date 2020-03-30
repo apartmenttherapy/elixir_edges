@@ -4,7 +4,7 @@ defmodule Edges.Mixfile do
   def project do
     [
       app: :edges,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       elixirc_paths: elixirc_paths(Mix.env),
@@ -17,17 +17,17 @@ defmodule Edges.Mixfile do
   def application do
     [
       mod: {Edges, []},
-      extra_applications: [:logger, :ecto]
+      extra_applications: [:logger]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      { :absinthe, ">= 0.0.0"},
+      { :absinthe, "~> 1.4"},
       { :absinthe_ecto, ">= 0.0.0"},
       { :postgrex, ">= 0.0.0" },
-      { :ecto, ">= 0.0.0"},
+      { :ecto_sql, "~> 3.0"},
       { :timex, ">= 0.0.0" },
     ]
   end
@@ -46,7 +46,7 @@ defmodule Edges.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.reset", "test"]
+      test: ["ecto.reset", "test"]
     ]
   end
 end

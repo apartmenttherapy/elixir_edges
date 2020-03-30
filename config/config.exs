@@ -34,10 +34,13 @@ config :edges,
   generators: [binary_id: true]
 
 config :edges, Edges.Repo,
-  adapter: Ecto.Adapters.Postgres,
   database: "edges_#{Mix.env}",
   username: "postgres",
   password: "postgres",
   hostname: "localhost"
+
+config :edges, :required_field_values,
+  action: ["Favorited", "Viewed"],
+  resource_type: ["Listing", "Store"]
 
 import_config "#{Mix.env}.exs"

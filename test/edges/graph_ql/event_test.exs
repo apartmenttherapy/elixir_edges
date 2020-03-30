@@ -6,7 +6,7 @@ defmodule Edges.GraphQL.EventTest do
 
   describe "creation" do
     test "create/2 returns {:ok, %Action{}} when given valid data" do
-      assert {:ok, %Action{}} = Event.create(%{person: "Bob", action: "Saved", resource_type: "Story", resource_id: "8"}, [])
+      assert {:ok, %Action{}} = Event.create(%{person: "29f34b51-957a-489e-abe7-9aeccfe81a45", action: "Viewed", resource_type: "Story", resource_id: "d720a10e-0c7a-44b8-bf34-2a185f867efa"}, [])
     end
 
     test "create/2 returns {:error, message: String.t} when given invalid data" do
