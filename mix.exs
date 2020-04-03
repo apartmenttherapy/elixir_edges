@@ -17,17 +17,17 @@ defmodule Edges.Mixfile do
   def application do
     [
       mod: {Edges, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :ecto]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      { :absinthe, "~> 1.4"},
+      { :absinthe, ">= 0.0.0"},
       { :absinthe_ecto, ">= 0.0.0"},
       { :postgrex, ">= 0.0.0" },
-      { :ecto_sql, "~> 3.0"},
+      { :ecto, "~> 2.1"},
       { :timex, ">= 0.0.0" },
     ]
   end
