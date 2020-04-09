@@ -16,7 +16,7 @@ defmodule Edges.Repo do
     {:ok, config}
   end
 
-  defp pool_size, do: String.to_integer(System.get_env("POOL_SIZE" || "10"))
+  defp pool_size, do: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
   defp database_url do
     case System.get_env("EDGES_DATABASE_URL") do
