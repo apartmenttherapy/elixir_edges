@@ -24,10 +24,10 @@ defmodule Edges.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      { :absinthe, ">= 0.0.0"},
+      { :absinthe, "~> 1.4"},
       { :absinthe_ecto, ">= 0.0.0"},
       { :postgrex, ">= 0.0.0" },
-      { :ecto, "~> 2.1"},
+      { :ecto_sql, "~> 3.0"},
       { :timex, ">= 0.0.0" },
     ]
   end
