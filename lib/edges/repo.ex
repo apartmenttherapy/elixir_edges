@@ -8,15 +8,10 @@ defmodule Edges.Repo do
   DATABASE_URL environment variable.
   """
   def init(_, opts) do
-    config =
-      opts
-      |> Keyword.put(:url, database_url())
-      |> Keyword.put(:pool_size, pool_size())
+    config = Keyword.put(opts, :url, database_url())
 
     {:ok, config}
   end
-
-  defp pool_size, do: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
   defp database_url do
     case System.get_env("EDGES_DATABASE_URL") do
