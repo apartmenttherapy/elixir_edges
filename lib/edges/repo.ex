@@ -8,17 +8,6 @@ defmodule Edges.Repo do
   DATABASE_URL environment variable.
   """
   def init(_, opts) do
-    config = Keyword.put(opts, :url, database_url())
-
-    {:ok, config}
-  end
-
-  defp database_url do
-    case System.get_env("EDGES_DATABASE_URL") do
-      nil ->
-        System.get_env("DATABASE_URL")
-      url ->
-        url
-    end
+    {:ok, opts}
   end
 end
